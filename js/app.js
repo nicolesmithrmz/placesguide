@@ -13,6 +13,7 @@
     { value: "been", label: "Been" },
     { value: "want_to_try", label: "Want to try" }
   ];
+  var MAX_PHOTOS = 5;
 
   var places = [];
   var filters = { city: "", types: {}, status: "all" };
@@ -21,6 +22,7 @@
   var map = null;
   var cluster = null;
   var swiper = null;
+  var photoSwipers = [];
   var markers = {};
   var selectedId = null;
 
@@ -39,11 +41,13 @@
     return '<span class="stars" aria-label="' + n + ' out of 5">' + "★".repeat(n) + "☆".repeat(5 - n) + "</span>";
   }
 
-  function formatDate(s) {
+  function formatDay(s) {
     if (!s) return "";
     var d = new Date(s + "T00:00:00");
-    return isNaN(d) ? "" : d.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+    return isNaN(d) ? "" : d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
   }
+
+  function plural(n, word) { return n + " " + word + (n === 1 ? "" : "s"); }
 
   /* ---------------- data ---------------- */
 
@@ -53,6 +57,23 @@
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
       });
+  }
+
+  // Work out the summary fields (average rating, latest photo, snippet) from the visit thread.
+  function prepare(p) {
+    p.visits = (p.visits || []).slice().sort(function (a, b) {
+      return String(a.date).localeCompare(String(b.date));
+    });
+    var ratings = p.visits.map(function (v) { return v.rating; }).filter(Boolean);
+    p._avg = ratings.length ? ratings.reduce(function (a, b) { return a + b; }, 0) / ratings.length : null;
+    p._latest = p.visits.length ? p.visits[p.visits.length - 1] : null;
+    p._photo = null;
+    for (var i = p.visits.length - 1; i >= 0 && !p._photo; i--) {
+      var ph = p.visits[i].photos;
+      if (ph && ph.length) p._photo = ph[0];
+    }
+    p._snippet = (p._latest && p._latest.text) || p.note || "";
+    return p;
   }
 
   /* ---------------- routing ---------------- */
@@ -79,17 +100,18 @@
   /* ---------------- home ---------------- */
 
   function miniCard(p) {
-    var thumb = p.photos && p.photos.length
-      ? '<img src="' + esc(p.photos[0]) + '" alt="' + esc(p.name) + '" loading="lazy">'
+    var thumb = p._photo
+      ? '<img src="' + esc(p._photo) + '" alt="' + esc(p.name) + '" loading="lazy">'
       : '<span class="initial">' + esc(initialOf(p)) + "</span>";
-    var meta = [(CATEGORIES[p.category] || {}).label, p.city].filter(Boolean).join(" · ");
+    var meta = [(CATEGORIES[p.category] || {}).label, p.city];
+    if (p.visits.length) meta.push(plural(p.visits.length, "visit"));
     return '<article class="mini">' +
       '<div class="thumb">' + thumb + "</div>" +
       '<div class="body">' +
         "<h3>" + esc(p.name) + "</h3>" +
-        '<div class="meta">' + esc(meta) + "</div>" +
-        stars(p.rating) +
-        (p.review ? '<p class="snippet">' + esc(p.review) + "</p>" : "") +
+        '<div class="meta">' + esc(meta.filter(Boolean).join(" · ")) + "</div>" +
+        stars(Math.round(p._avg)) +
+        (p._snippet ? '<p class="snippet">' + esc(p._snippet) + "</p>" : "") +
         '<a class="see" href="#map/' + encodeURIComponent(p.id) + '"><span>See on map</span></a>' +
       "</div></article>";
   }
@@ -102,25 +124,26 @@
     var been = places.filter(function (p) { return p.status === "been"; });
     var want = places.filter(function (p) { return p.status === "want_to_try"; });
     var cities = {}, countries = {};
-    places.forEach(function (p) { cities[p.city] = 1; countries[p.country] = 1; });
+    been.forEach(function (p) { cities[p.city] = 1; countries[p.country] = 1; });
 
     $("stats").innerHTML = [
       [been.length, "places visited"],
-      [Object.keys(cities).length, "cities"],
-      [Object.keys(countries).length, "countries"],
+      [Object.keys(cities).length, "cities visited"],
+      [Object.keys(countries).length, "countries visited"],
       [want.length, "want to try"]
     ].map(function (s) {
-      return '<div class="stat"><strong>' + s[0] + "</strong><span class=\"label\">" + s[1] + "</span></div>";
+      return '<div class="stat"><strong>' + s[0] + '</strong><span class="label">' + s[1] + "</span></div>";
     }).join("");
 
-    var favs = been.filter(function (p) { return p.rating >= 4; }).sort(function (a, b) {
-      return b.rating - a.rating || String(b.visited_on).localeCompare(String(a.visited_on));
+    var favs = been.filter(function (p) { return p._avg >= 4; }).sort(function (a, b) {
+      var da = a._latest ? a._latest.date : "", db = b._latest ? b._latest.date : "";
+      return b._avg - a._avg || String(db).localeCompare(String(da));
     }).slice(0, 3);
     var recent = places.slice().sort(function (a, b) {
       return String(b.added).localeCompare(String(a.added));
     }).slice(0, 3);
 
-    fillBlock("favourites", favs, "Favourites will show up here once places have a 4 or 5 star rating.");
+    fillBlock("favourites", favs, "Favourites will show up here once a place averages 4 stars or more.");
     fillBlock("recent", recent, "Nothing added yet.");
     fillBlock("wishlist", want.slice(0, 3), "Nothing on the wish list yet.");
   }
@@ -197,25 +220,87 @@
     });
   }
 
+  function photosHtml(v, name) {
+    var list = (v.photos || []).slice(0, MAX_PHOTOS);
+    if (!list.length) return "";
+    var slides = list.map(function (src) {
+      return '<div class="swiper-slide"><img src="' + esc(src) + '" alt="' + esc(name) + '" loading="lazy"></div>';
+    }).join("");
+    var many = list.length > 1;
+    return '<div class="photo-swiper swiper" data-total="' + list.length + '">' +
+      '<div class="swiper-wrapper">' + slides + "</div>" +
+      (many
+        ? '<button type="button" class="photo-prev" aria-label="Previous photo">‹</button>' +
+          '<button type="button" class="photo-next" aria-label="Next photo">›</button>' +
+          '<span class="photo-count">1 / ' + list.length + "</span>"
+        : "") +
+      "</div>";
+  }
+
+  function visitHtml(v, i, total, name) {
+    var head = (total > 1 ? "Visit " + (i + 1) + " · " : "") + formatDay(v.date);
+    var withText = (v.with || []).join(", ");
+    var triedText = (v.tried || []).join(", ");
+    return '<li class="visit">' +
+      '<div class="visit-head label">' + esc(head) + "</div>" +
+      stars(v.rating) +
+      (v.text ? '<p class="review">' + esc(v.text) + "</p>" : "") +
+      (withText ? '<p class="fact"><span class="label">With</span> ' + esc(withText) + "</p>" : "") +
+      (triedText ? '<p class="fact"><span class="label">Tried</span> ' + esc(triedText) + "</p>" : "") +
+      photosHtml(v, name) +
+      "</li>";
+  }
+
   function slideHtml(p) {
-    var photos = p.photos && p.photos.length
-      ? p.photos.map(function (src) {
-          return '<img src="' + esc(src) + '" alt="' + esc(p.name) + '" loading="lazy">';
-        }).join("")
-      : '<div class="ph"><span class="initial">' + esc(initialOf(p)) + "</span></div>";
-    var tags = (p.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("");
     var status = p.status === "been" ? "Been" : "Want to try";
-    var meta = [(CATEGORIES[p.category] || {}).label, p.city + ", " + p.country, formatDate(p.visited_on)]
-      .filter(Boolean).join(" · ");
+    var meta = [(CATEGORIES[p.category] || {}).label, p.city + ", " + p.country].filter(Boolean).join(" · ");
+    var summary = "";
+    if (p.visits.length) {
+      summary = (p._avg ? stars(Math.round(p._avg)) + ' <span class="avg">' + p._avg.toFixed(1) + "</span> · " : "") +
+        '<span class="label">' + esc(plural(p.visits.length, "visit")) + "</span>";
+    }
+    var body;
+    if (p.visits.length) {
+      body = '<ol class="thread">' + p.visits.map(function (v, i) {
+        return visitHtml(v, i, p.visits.length, p.name);
+      }).join("") + "</ol>";
+    } else if (p.status === "been") {
+      body = '<p class="note">No visits logged yet.</p>';
+    } else {
+      body = p.note ? '<p class="note">' + esc(p.note) + "</p>" : "";
+    }
+    var tags = (p.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("");
     return '<div class="swiper-slide"><article class="place">' +
       "<header><h3>" + esc(p.name) + '</h3><span class="badge ' + p.status + '">' + status + "</span></header>" +
       '<div class="meta">' + esc(meta) + "</div>" +
-      stars(p.rating) +
-      '<div class="photos swiper-no-swiping">' + photos + "</div>" +
-      (p.review ? '<p class="review">' + esc(p.review) + "</p>" : "") +
+      (summary ? '<div class="summary">' + summary + "</div>" : "") +
+      body +
       (tags ? '<div class="tags">' + tags + "</div>" : "") +
       (p.address ? '<p class="addr">' + esc(p.address) + "</p>" : "") +
       "</article></div>";
+  }
+
+  function destroyPhotoSwipers() {
+    photoSwipers.forEach(function (s) { s.destroy(true, true); });
+    photoSwipers = [];
+  }
+
+  function initPhotoSwipers() {
+    $("place-slides").querySelectorAll(".photo-swiper").forEach(function (el) {
+      var total = Number(el.dataset.total);
+      var counter = el.querySelector(".photo-count");
+      photoSwipers.push(new Swiper(el, {
+        nested: true,
+        navigation: total > 1
+          ? { prevEl: el.querySelector(".photo-prev"), nextEl: el.querySelector(".photo-next") }
+          : false,
+        on: {
+          slideChange: function (s) {
+            if (counter) counter.textContent = (s.activeIndex + 1) + " / " + total;
+          }
+        }
+      }));
+    });
   }
 
   function initMap() {
@@ -230,8 +315,9 @@
     swiper = new Swiper("#place-swiper", {
       slidesPerView: 1.06,
       spaceBetween: 10,
+      autoHeight: true, // short cards (want to try) shouldn't inherit the tallest card's height
       noSwipingClass: "swiper-no-swiping",
-      navigation: { prevEl: ".swiper-button-prev", nextEl: ".swiper-button-next" },
+      navigation: { prevEl: ".place-prev", nextEl: ".place-next" },
       breakpoints: { 900: { slidesPerView: 1, spaceBetween: 12 } },
       on: { slideChange: function (s) { select(s.activeIndex, true); } }
     });
@@ -267,7 +353,9 @@
       cluster.addLayer(m);
     });
 
+    destroyPhotoSwipers();
     $("place-slides").innerHTML = filtered.map(slideHtml).join("");
+    initPhotoSwipers();
     swiper.update();
     swiper.slideTo(0, 0, false);
 
@@ -312,7 +400,7 @@
   /* ---------------- start ---------------- */
 
   load().then(function (data) {
-    places = data;
+    places = data.map(prepare);
     buildFilters();
     renderHome();
     window.addEventListener("hashchange", route);

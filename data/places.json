@@ -1,22 +1,5 @@
 [
   {
-    "id": "blue-bottle-ebisu",
-    "name": "Blue Bottle Coffee Ebisu",
-    "category": "coffee",
-    "status": "been",
-    "lat": 35.6472554,
-    "lng": 139.7095394,
-    "address": "Komazawa-dori, Ebisu, Shibuya, Tokyo 150-0013",
-    "city": "Tokyo",
-    "country": "Japan",
-    "rating": 5,
-    "review": "SAMPLE: replace with your own review. A calm, bright stop for a slow morning flat white.",
-    "visited_on": "2025-04-12",
-    "added": "2026-10-23",
-    "tags": ["sample", "slow morning"],
-    "photos": []
-  },
-  {
     "id": "katzs-delicatessen",
     "name": "Katz's Delicatessen",
     "category": "restaurant",
@@ -26,12 +9,26 @@
     "address": "205 E Houston St, New York, NY 10002",
     "city": "New York",
     "country": "United States",
-    "rating": 4,
-    "review": "SAMPLE: replace with your own review. Huge pastrami sandwich, worth the line.",
-    "visited_on": "2024-09-03",
     "added": "2026-10-22",
     "tags": ["sample", "classic"],
-    "photos": []
+    "visits": [
+      {
+        "date": "2024-09-03",
+        "text": "SAMPLE: replace with your own review. Huge pastrami sandwich, worth the line.",
+        "with": ["Sample friend"],
+        "tried": ["Pastrami on rye"],
+        "rating": 4,
+        "photos": []
+      },
+      {
+        "date": "2025-05-17",
+        "text": "SAMPLE: went back and tried the soup this time. This is how a second visit shows up in the thread.",
+        "with": ["Sample cousin"],
+        "tried": ["Matzo ball soup", "Pastrami on rye"],
+        "rating": 5,
+        "photos": []
+      }
+    ]
   },
   {
     "id": "cafe-de-flore",
@@ -43,12 +40,18 @@
     "address": "172 Bd Saint-Germain, 75006 Paris",
     "city": "Paris",
     "country": "France",
-    "rating": 4,
-    "review": "SAMPLE: replace with your own review. Classic Paris people-watching over a café crème.",
-    "visited_on": "2023-06-20",
     "added": "2026-10-21",
     "tags": ["sample", "people-watching"],
-    "photos": []
+    "visits": [
+      {
+        "date": "2023-06-20",
+        "text": "SAMPLE: replace with your own review. Classic Paris people-watching over a café crème.",
+        "with": [],
+        "tried": ["Café crème"],
+        "rating": 4,
+        "photos": []
+      }
+    ]
   },
   {
     "id": "bar-marsella",
@@ -60,12 +63,10 @@
     "address": "Carrer de Sant Pau, 65, Barcelona",
     "city": "Barcelona",
     "country": "Spain",
-    "rating": null,
-    "review": "SAMPLE: on the list. Famous old absinthe bar in El Raval.",
-    "visited_on": null,
     "added": "2026-10-20",
     "tags": ["sample", "historic"],
-    "photos": []
+    "note": "SAMPLE: on the list. Famous old absinthe bar in El Raval.",
+    "visits": []
   },
   {
     "id": "tartine-bakery",
@@ -77,11 +78,69 @@
     "address": "600 Guerrero St, San Francisco, CA 94110",
     "city": "San Francisco",
     "country": "United States",
-    "rating": null,
-    "review": "SAMPLE: on the list. Morning buns everyone keeps talking about.",
-    "visited_on": null,
     "added": "2026-10-19",
     "tags": ["sample", "bakery"],
-    "photos": []
+    "note": "SAMPLE: on the list. Morning buns everyone keeps talking about.",
+    "visits": []
+  },
+  {
+    "id": "chocolateria-san-gines",
+    "name": "Chocolatería San Ginés",
+    "category": "coffee",
+    "status": "want_to_try",
+    "lat": 40.4167707,
+    "lng": -3.7068030,
+    "address": "Pasadizo de San Ginés, 5, 28013 Madrid",
+    "city": "Madrid",
+    "country": "Spain",
+    "added": "2026-10-23",
+    "tags": ["suggested", "churros"],
+    "note": "SUGGESTION: a well-known Madrid stop for churros and thick hot chocolate. Edit or delete me.",
+    "visits": []
+  },
+  {
+    "id": "mercado-de-san-miguel",
+    "name": "Mercado de San Miguel",
+    "category": "special",
+    "status": "want_to_try",
+    "lat": 40.4153741,
+    "lng": -3.7090151,
+    "address": "Plaza de San Miguel, 28005 Madrid",
+    "city": "Madrid",
+    "country": "Spain",
+    "added": "2026-10-23",
+    "tags": ["suggested", "market"],
+    "note": "SUGGESTION: covered food market near Plaza Mayor, good for grazing on tapas. Edit or delete me.",
+    "visits": []
+  },
+  {
+    "id": "camparino-in-galleria",
+    "name": "Camparino in Galleria",
+    "category": "bar",
+    "status": "want_to_try",
+    "lat": 45.4649201,
+    "lng": 9.1898776,
+    "address": "Galleria Vittorio Emanuele II, 20121 Milan",
+    "city": "Milan",
+    "country": "Italy",
+    "added": "2026-10-23",
+    "tags": ["suggested", "aperitivo"],
+    "note": "SUGGESTION: historic aperitivo bar inside the Galleria, where the Campari story started. Edit or delete me.",
+    "visits": []
+  },
+  {
+    "id": "pasticceria-marchesi-galleria",
+    "name": "Pasticceria Marchesi (Galleria)",
+    "category": "coffee",
+    "status": "want_to_try",
+    "lat": 45.4654173,
+    "lng": 9.1901311,
+    "address": "Galleria Vittorio Emanuele II, 20121 Milan",
+    "city": "Milan",
+    "country": "Italy",
+    "added": "2026-10-23",
+    "tags": ["suggested", "pastry"],
+    "note": "SUGGESTION: classic Milan pasticceria for coffee and pastries. Edit or delete me.",
+    "visits": []
   }
 ]
