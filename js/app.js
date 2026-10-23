@@ -3,10 +3,10 @@
   "use strict";
 
   var CATEGORIES = {
-    restaurant: { label: "Restaurants", emoji: "🍽️" },
-    coffee: { label: "Coffee", emoji: "☕" },
-    bar: { label: "Bars", emoji: "🍸" },
-    special: { label: "Special places", emoji: "✨" }
+    restaurant: { label: "Restaurants" },
+    coffee: { label: "Coffee" },
+    bar: { label: "Bars" },
+    special: { label: "Special places" }
   };
   var STATUSES = [
     { value: "all", label: "All" },
@@ -32,7 +32,7 @@
     });
   }
 
-  function emojiFor(p) { return (CATEGORIES[p.category] || CATEGORIES.special).emoji; }
+  function initialOf(p) { return String(p.name || "?").trim().charAt(0).toUpperCase(); }
 
   function stars(n) {
     if (!n) return "";
@@ -81,7 +81,7 @@
   function miniCard(p) {
     var thumb = p.photos && p.photos.length
       ? '<img src="' + esc(p.photos[0]) + '" alt="' + esc(p.name) + '" loading="lazy">'
-      : esc(emojiFor(p));
+      : '<span class="initial">' + esc(initialOf(p)) + "</span>";
     var meta = [(CATEGORIES[p.category] || {}).label, p.city].filter(Boolean).join(" · ");
     return '<article class="mini">' +
       '<div class="thumb">' + thumb + "</div>" +
@@ -90,7 +90,7 @@
         '<div class="meta">' + esc(meta) + "</div>" +
         stars(p.rating) +
         (p.review ? '<p class="snippet">' + esc(p.review) + "</p>" : "") +
-        '<a class="see" href="#map/' + encodeURIComponent(p.id) + '">See on map →</a>' +
+        '<a class="see" href="#map/' + encodeURIComponent(p.id) + '"><span>See on map</span></a>' +
       "</div></article>";
   }
 
@@ -110,7 +110,7 @@
       [Object.keys(countries).length, "countries"],
       [want.length, "want to try"]
     ].map(function (s) {
-      return '<div class="stat"><strong>' + s[0] + "</strong><span>" + s[1] + "</span></div>";
+      return '<div class="stat"><strong>' + s[0] + "</strong><span class=\"label\">" + s[1] + "</span></div>";
     }).join("");
 
     var favs = been.filter(function (p) { return p.rating >= 4; }).sort(function (a, b) {
@@ -151,7 +151,7 @@
     var chips = $("type-chips");
     chips.innerHTML = Object.keys(CATEGORIES).map(function (k) {
       return '<button type="button" class="chip" data-type="' + k + '" aria-pressed="false">' +
-        CATEGORIES[k].emoji + " " + esc(CATEGORIES[k].label) + "</button>";
+        esc(CATEGORIES[k].label) + "</button>";
     }).join("");
     chips.onclick = function (e) {
       var b = e.target.closest("button");
@@ -191,10 +191,9 @@
   function pinIcon(p, selected) {
     return L.divIcon({
       className: "pin " + p.status + (selected ? " selected" : ""),
-      html: "<span><b>" + emojiFor(p) + "</b></span>",
-      iconSize: selected ? [42, 42] : [34, 34],
-      iconAnchor: selected ? [8, 40] : [6, 32],
-      popupAnchor: [10, -30]
+      html: "<span></span>",
+      iconSize: selected ? [22, 22] : [14, 14],
+      iconAnchor: selected ? [11, 11] : [7, 7]
     });
   }
 
@@ -203,7 +202,7 @@
       ? p.photos.map(function (src) {
           return '<img src="' + esc(src) + '" alt="' + esc(p.name) + '" loading="lazy">';
         }).join("")
-      : '<div class="ph">' + esc(emojiFor(p)) + "</div>";
+      : '<div class="ph"><span class="initial">' + esc(initialOf(p)) + "</span></div>";
     var tags = (p.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("");
     var status = p.status === "been" ? "Been" : "Want to try";
     var meta = [(CATEGORIES[p.category] || {}).label, p.city + ", " + p.country, formatDate(p.visited_on)]
