@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nicole's Guide</title>
+  <meta name="description" content="A personal map of the restaurants, coffee shops, bars and special places Nicole loves, and the ones she wants to try next.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📍%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home">📍 Nicole's Guide</a>
+    <nav class="tabs" aria-label="Main">
+      <a href="#home" data-tab="home">Home</a>
+      <a href="#map" data-tab="map">Map</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HOME TAB -->
+    <section id="home" class="page" aria-labelledby="home-title">
+      <div class="hero">
+        <p class="eyebrow">A personal map of places worth going to</p>
+        <h1 id="home-title">Nicole's Guide</h1>
+        <p class="lede">The restaurants, coffee shops, bars and special places I love, and the ones I can't wait to try.</p>
+        <a class="button" href="#map">Explore the map</a>
+      </div>
+
+      <div class="container">
+        <div class="stats" id="stats" aria-label="Guide stats"></div>
+
+        <section class="why">
+          <h2>Why this project</h2>
+          <!-- EDIT ME: replace this with your own story. -->
+          <p>Every good meal, perfect cup of coffee and unexpected favourite spot ends up scattered across old texts, notes and photos. This guide puts all of it in one place: a map I can keep adding to, with honest reviews of where I've been and a running list of where I want to go next.</p>
+          <p>If you're visiting one of these cities, I hope it points you somewhere you love too.</p>
+        </section>
+
+        <section class="block">
+          <div class="block-head"><h2>Favourites</h2><a href="#map">See all on the map</a></div>
+          <div class="cards" id="favourites"></div>
+        </section>
+
+        <section class="block">
+          <div class="block-head"><h2>Recently added</h2></div>
+          <div class="cards" id="recent"></div>
+        </section>
+
+        <section class="block">
+          <div class="block-head"><h2>Want to try next</h2></div>
+          <div class="cards" id="wishlist"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- MAP TAB -->
+    <section id="map" class="page" aria-label="Map">
+      <div class="map-layout">
+        <div class="map-area">
+          <div class="filters">
+            <label class="select">
+              <span class="sr-only">City</span>
+              <select id="city-filter"></select>
+            </label>
+            <div class="chips" id="type-chips" role="group" aria-label="Type of place"></div>
+            <div class="seg" id="status-toggle" role="group" aria-label="Status"></div>
+          </div>
+          <div id="leaflet-map" aria-label="Map of places"></div>
+        </div>
+        <aside class="panel" aria-label="Place details">
+          <p class="count" id="result-count" aria-live="polite"></p>
+          <div class="swiper" id="place-swiper">
+            <div class="swiper-wrapper" id="place-slides"></div>
+            <div class="swiper-button-prev" aria-label="Previous place"></div>
+            <div class="swiper-button-next" aria-label="Next place"></div>
+          </div>
+          <p class="empty" id="empty" hidden>No places match these filters.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <noscript><p class="container">This site needs JavaScript to show the map.</p></noscript>
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
