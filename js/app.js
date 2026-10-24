@@ -123,18 +123,6 @@
   function renderHome() {
     var been = places.filter(function (p) { return p.status === "been"; });
     var want = places.filter(function (p) { return p.status === "want_to_try"; });
-    var cities = {}, countries = {};
-    been.forEach(function (p) { cities[p.city] = 1; countries[p.country] = 1; });
-
-    $("stats").innerHTML = [
-      [been.length, "places visited"],
-      [Object.keys(cities).length, "cities visited"],
-      [Object.keys(countries).length, "countries visited"],
-      [want.length, "want to try"]
-    ].map(function (s) {
-      return '<div class="stat"><strong>' + s[0] + '</strong><span class="label">' + s[1] + "</span></div>";
-    }).join("");
-
     var favs = been.filter(function (p) { return p._avg >= 4; }).sort(function (a, b) {
       var da = a._latest ? a._latest.date : "", db = b._latest ? b._latest.date : "";
       return b._avg - a._avg || String(db).localeCompare(String(da));
@@ -406,7 +394,7 @@
     window.addEventListener("hashchange", route);
     route();
   }).catch(function (err) {
-    $("stats").innerHTML = '<p class="note">Could not load the places (' + esc(err.message) + "). Try refreshing the page.</p>";
+    $("favourites").innerHTML = '<p class="note">Could not load the places (' + esc(err.message) + "). Try refreshing the page.</p>";
     console.error(err);
   });
 })();
