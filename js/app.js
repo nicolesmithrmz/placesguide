@@ -80,13 +80,13 @@
 
   function parseHash() {
     var parts = location.hash.replace(/^#/, "").split("/");
-    var tab = parts[0] === "map" ? "map" : "home";
+    var tab = parts[0] === "map" || parts[0] === "about" ? parts[0] : "home";
     return { tab: tab, id: tab === "map" && parts[1] ? decodeURIComponent(parts[1]) : null };
   }
 
   function route() {
     var r = parseHash();
-    ["home", "map"].forEach(function (t) {
+    ["home", "map", "about"].forEach(function (t) {
       $(t).classList.toggle("active", t === r.tab);
     });
     document.querySelectorAll(".tabs a").forEach(function (a) {
