@@ -110,14 +110,6 @@ main { flex: 1; min-height: 0; position: relative; }
   line-height: 1.85;
   text-wrap: pretty;
 }
-.hero-text::first-letter {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 3em;
-  line-height: 0.8;
-  float: left;
-  padding: 6px 10px 0 0;
-}
 #home .container { padding-top: 96px; }
 
 .why { display: grid; gap: 20px; margin-bottom: 72px; }
