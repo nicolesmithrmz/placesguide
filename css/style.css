@@ -101,9 +101,12 @@ main { flex: 1; min-height: 0; position: relative; }
   line-height: 1;
   text-wrap: balance;
 }
+/* Home title: one word above the other, big enough to anchor the paragraph beneath it. */
+#home-title { font-size: clamp(3rem, 15vw, 8rem); line-height: 0.95; }
+#home-title span { display: block; }
 .hero-text {
-  max-width: 560px;
-  margin: 44px auto 0;
+  max-width: 600px;
+  margin: 52px auto 0;
   text-align: left;
   font-size: 1.08rem;
   font-weight: 400;
