@@ -75,12 +75,18 @@ button, select { font-family: var(--sans); }
 }
 .tabs a:hover { color: var(--text); }
 .tabs a[aria-current="page"] { color: var(--text); border-bottom-color: var(--text); }
+@media (max-width: 480px) {
+  .topbar { padding: 0 16px; }
+  .brand { font-size: 0.92rem; letter-spacing: 0.1em; }
+  .tabs { gap: 14px; }
+  .tabs a { letter-spacing: 0.16em; }
+}
 
 /* ---------- pages ---------- */
 main { flex: 1; min-height: 0; position: relative; }
 .page { display: none; height: 100%; }
 .page.active { display: block; }
-#home.active { overflow-y: auto; }
+#home.active, #about.active { overflow-y: auto; }
 
 .container { max-width: 1080px; margin: 0 auto; padding: 0 20px 72px; }
 
@@ -120,6 +126,11 @@ main { flex: 1; min-height: 0; position: relative; }
 .why h2 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
 .why p { margin: 0 0 14px; max-width: 60ch; font-size: 1.05rem; }
 .why p:last-child { margin-bottom: 0; }
+.why + .why { border-top: 1px solid var(--rule); padding-top: 48px; }
+
+/* About tab: a plain page title, then the same heading-and-text layout as Home. */
+.hero-compact { padding: 56px 20px 40px; }
+.hero-compact h1 { font-size: clamp(2.2rem, 8vw, 4rem); }
 
 .block { margin-bottom: 64px; }
 .block-head {
