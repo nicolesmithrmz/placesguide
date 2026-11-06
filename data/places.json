@@ -142,5 +142,70 @@
     "tags": ["suggested", "pastry"],
     "note": "SUGGESTION: classic Milan pasticceria for coffee and pastries. Edit or delete me.",
     "visits": []
+  },
+  {
+    "id": "not-from-italy-malasana",
+    "name": "Not From Italy (Malasaña)",
+    "category": "restaurant",
+    "status": "been",
+    "lat": 40.426464,
+    "lng": -3.7018,
+    "address": "Corredera Alta de San Pablo, 33, 28004 Madrid",
+    "city": "Madrid",
+    "country": "Spain",
+    "added": "2026-11-06",
+    "visits": []
+  },
+  {
+    "id": "oter-epicure",
+    "name": "Oter Epicure",
+    "category": "restaurant",
+    "status": "been",
+    "lat": 40.42896,
+    "lng": -3.686114,
+    "address": "Calle de Claudio Coello, 71, 28001 Madrid",
+    "city": "Madrid",
+    "country": "Spain",
+    "added": "2026-11-06",
+    "visits": []
+  },
+  {
+    "id": "lady-madrid",
+    "name": "Lady Madrid",
+    "category": "bar",
+    "status": "been",
+    "lat": 40.4375931,
+    "lng": -3.7010084,
+    "address": "Calle de la Santísima Trinidad, 26, 28010 Madrid",
+    "city": "Madrid",
+    "country": "Spain",
+    "added": "2026-11-06",
+    "visits": []
+  },
+  {
+    "id": "biang-biang-bar-chueca",
+    "name": "Biang Biang Bar (Chueca)",
+    "category": "restaurant",
+    "status": "been",
+    "lat": 40.4220946,
+    "lng": -3.6989021,
+    "address": "Calle de Pelayo, 8, 28004 Madrid",
+    "city": "Madrid",
+    "country": "Spain",
+    "added": "2026-11-06",
+    "visits": []
+  },
+  {
+    "id": "acid-shop",
+    "name": "ACID Shop",
+    "category": "coffee",
+    "status": "been",
+    "lat": 40.4216661,
+    "lng": -3.6956109,
+    "address": "Calle del Barquillo, 18, 28004 Madrid",
+    "city": "Madrid",
+    "country": "Spain",
+    "added": "2026-11-06",
+    "visits": []
   }
 ]

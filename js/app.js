@@ -72,7 +72,7 @@
       var ph = p.visits[i].photos;
       if (ph && ph.length) p._photo = ph[0];
     }
-    p._snippet = (p._latest && p._latest.text) || p.note || "";
+    p._snippet = (p._latest && p._latest.text) || p.note || (p.status === "been" ? "Review coming soon." : "");
     return p;
   }
 
@@ -253,7 +253,7 @@
         return visitHtml(v, i, p.visits.length, p.name);
       }).join("") + "</ol>";
     } else if (p.status === "been") {
-      body = '<p class="note">No visits logged yet.</p>';
+      body = '<p class="note">' + esc(p.note || "Review coming soon.") + "</p>";
     } else {
       body = p.note ? '<p class="note">' + esc(p.note) + "</p>" : "";
     }
