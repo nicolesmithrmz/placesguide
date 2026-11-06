@@ -83,7 +83,9 @@ Each visit can have up to 5 photos. Smaller photos load faster. Around 200 KB ea
 
 Check the file any time with `python3 scripts/validate.py`.
 
-The places in there now are **samples or suggestions**. New York, Paris, Barcelona and San Francisco are samples. The Madrid and Milan places are suggestions to edit or delete.
+Only places you have confirmed go in this file. A place marked `been` with no visits yet shows "Review coming soon." on the site until you send a review.
+
+On the map, places you've been are solid red pins and places you want to try are blue rings. A small key in the corner of the map explains them.
 
 ## Putting the site online (one time)
 
